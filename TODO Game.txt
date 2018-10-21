@@ -1,0 +1,55 @@
+[GAME]
+
+[BUG LOG]
+- player moves forward without input [FIXED]
+- when a player exits through the very corner
+of the map they come out slightly to the right [UNFIXED]
+- Player spawns facing the left side [UNFIXED]
+- When a player represses fire key the bullet resets at character position [FIXED]
+- Boss hitbox in the shape of square [UNFIXED]
+
+[Player]
+- Move player across y axis [CHECK]
+- Allow the player to turn [CHECK]
+- Move player in the angle they are facing [CHECK]
+- Do Something when player leaves screen border [CHECK]
+- Kill player when life is zero []
+
+
+[PLAYER_SHOT]
+- Do something when spacebar is pressed [CHECK]
+- assign image to bullet [CHECK]
+- spawn bullet when spacebar is pressed [CHECK]
+- make bullet move where player is facing [CHECK]
+- despawn when outside screen [CHECK]
+
+[BOSS]
+- attach image to boss function [CHECK]
+- kill the player when they touch the boss [CHECK]
+- when player bullet hits boss lower boss health [CHECK]
+- when boss heatlh is zero kill boss [CHECK]
+
+[BOSS_SHOT]
+- attach image to boss shot [CHECK]
+- add movement to boss shot [CHECK] //by using same movement path but adding negative we can reverse its movement
+- make bullet move towards player []
+- shoot where player is []
+
+//when the player first presses a key we can activate two different variables along with the key they pushed, first one will be randomized to determine what pattern of shooting we will use
+//second variable will be used to determine when the pattern can be reset for example we could have both variables set to 1.0 and true, the if statement takes in the true value and proceeds to randomize the 1.0 variable
+//which ever pattern is called, that pattern will set the true to false. Once the pattern is finished such as the bullets leaving the game field we can set the value back to true in order to get a new value
+
+[BONUS]
+- allow player to move backwards []
+- create walls []
+- create game over screen []
+- create force field for boss during certain parts of fight []
+- allow bullets to cancel eachother out []
+- add shot patterns []
+
+[CODE]
+- change variable names to something more understandable []
+- comment lines []
+- change function names []
+
+

@@ -1,0 +1,11 @@
+[package]
+name = "game_v1"
+version = "0.1.0"
+authors = ["yasasa is the king"]
+edition = "2018"
+
+[dependencies]
+ggez = "0.4.4"
+rand = "0.5.5"
+
+
