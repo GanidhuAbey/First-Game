@@ -90,47 +90,6 @@ fn create_shot() -> Actor {
     }
 }
 
-//obselete functions
-/*
-fn move_player_x(input: &InputState, mut sv: f32) -> f32 {
-    match input.x_value {
-        1.0 => sv += 1.0,
-        -1.0 => sv -= 1.0,
-        _ => (),
-    }
-    return sv;
-}
-*/
-//function to move player across y axis
-/*
-fn move_player_y(input: &InputState, mut sv: f32) -> f32 {
-    match input.y_value {
-        1.0 => sv += 1.0,
-        -1.0 => sv -= 1.0,
-        _ => (),
-    }
-    return sv;
-}
-*/
-
-
-
-/*
-fn player_model(pos: Point2, ctx: &mut Context) {
-    graphics::circle(ctx,
-                         DrawMode::Fill,
-                         pos,
-                         30.0,
-                         1.0).unwrap();
-    graphics::circle(ctx,
-                         DrawMode::Fill,
-                         Point2::new(350.0, 350.0),
-                         50.0,
-                         1.0).unwrap();
-    graphics::present(ctx);
-}
-*/
-
 //calculates where the where the player object is facing based on the rotation value given
 fn forward_angle(angle: f32) -> Vector2 {
     let vx = angle.cos();
@@ -149,42 +108,6 @@ fn screen_origin(screen_width: f32 , screen_height: f32, pos: Point2) -> Point2 
 
     Point2::new(origin_x, origin_y)
 }
-
-//obselete function
-/*
-fn collision(pos: Point2) {
-
-    let combined_radius = Point2::new(50.0, 50.0);
-    let object_p = Point2::new(350.0, 350.0);
-
-    let distance_x = object_p.x - pos.x;
-    let distance_y = object_p.y - pos.y;
-
-    let distance = Point2::new(distance_x, distance_y);
-
-    if distance > Point2::new(0.0, 0.0) {
-        if distance <= Point2::new(50.0, 50.0) {
-            println!("x: {} , y: {}", pos.x, pos.y);
-        }
-    }
-    else if distance <= Point2::new(0.0, 0.0) {
-        if distance < Point2::new(750.0, 750.0) {
-            println!("x: {} , y: {}", pos.x, pos.y);
-        }
-    }
-    else if distance.x >= 0.0 && distance.y < 0.0  {
-        if distance <= Point2::new(50.0, 750.0) {
-            println!("x: {} , y: {}", pos.x, pos.y);
-        }
-    }
-    else if distance.x <= 0.0 && distance.y > 0.0 {
-        if distance < Point2::new(750.0, 50.0) {
-            println!("x: {} , y: {}", pos.x, pos.y);
-        }
-    }
-
-}
-*/
 
 //binds Keycodes "A" and "S" to the rotation of player
 fn turn_rate(input: &InputState, actor: &mut Actor) {
@@ -325,8 +248,6 @@ fn boss_shoot(input: &mut InputState, s_actor: &mut Actor, pattern: u32, path: V
     //checks whether bullet is past screen bounds, if true
     
     if s_actor.pos.x > 360.0 || s_actor.pos.x < -360.0 || s_actor.pos.y > 550.0 || s_actor.pos.y < -350.0 {
-        //obselete ignore
-        input.boss_shoot = 0.0;
         //calculates a new bullet pattern, not implemented yet
         let new_pattern = boss_should_shoot();
         return new_pattern;
