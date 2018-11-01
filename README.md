@@ -1,2 +1,3 @@
 # First-Game
-First game
+Simple Shooting game where you're supposed to kill the turrent
+though it isnt complete yet
