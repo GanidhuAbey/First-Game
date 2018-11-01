@@ -2,6 +2,7 @@
 //by two and put both those values into a Point2 coordinate.
 
 
+
 //importing game engine
 extern crate ggez;
 extern crate rand;
@@ -46,16 +47,19 @@ struct Actor {
     size: Point2,
     tag: ActorType,
     pos: Point2,
+    shape: String,
 }
 
 //HP values of player and enemy
 const PLAYER_LIFE: f32 = 1.0;
 const BOSS_LIFE: f32 = 10.0;
 //might be implemented later as a timer for the bullet
+//nvm this feature was useless il remove it later
 const SHOT_LIFE: f32 = 1.0;
 
 //creates sizes for the game
 
+/////////////CREATING GAME OBJECTS\\\\\\\\\\\\\\
 
 //assigning values to player object
 fn create_player() -> Actor {
@@ -64,7 +68,8 @@ fn create_player() -> Actor {
         life: PLAYER_LIFE,
         size: Point2::new(1.0, 1.0),
         tag: ActorType::player,
-        pos: Point2::origin()
+        pos: Point2::origin(),
+        shape: String::from("Triangle"),
     }
 }
 
@@ -76,6 +81,7 @@ fn create_boss() -> Actor {
         size: Point2::new(3.1, 3.1),
         tag: ActorType::boss,
         pos: Point2::origin(),
+        shape: String::from("Circle"),
     }
 }
 
@@ -87,7 +93,47 @@ fn create_shot() -> Actor {
         size: Point2::new(1.0, 1.0),
         tag: ActorType::shot,
         pos: Point2::new(700.0, 700.0),
+        shape: String::from("Circle"),
     }
+}
+//--------------------------------------\\
+//////////////COLLISION LOGIC\\\\\\\\\\\\\\
+//----------------------------------------\\
+fn CollisionLogic(input: &mut InputState, initial_object: &mut Actor, other_object: &mut Actor) {
+    let collision_type = format!("{}{}", initial_object.shape, other_object.shape);
+    //you're probably goona open this up try to make progress, get frustrated and quit; so when that happens why not play some games with a freind
+    //instead of being the total neet you are?
+
+    if collision_type == "TriangleCircle" {
+        //first calculate hitbox
+        //gonna try random stuff to get this shit to work
+        let mut object_distance = (initial_object.pos + Vector2::new(350., 175.,)) - (other_object.pos + Vector2::new(350., 350.));
+        let collision_distance = object_distance.norm();
+
+        //this kinda works, but i realized that its just a box thats slightly smaller than a triangle
+        //probably going to have to rethink this
+        if collision_distance <= 12.0 {
+            println!("hit!!!");
+        }
+        else {
+        }
+    }
+    else if collision_type == "CircleCircle" {
+        let collision_distance = (initial_object.pos + Vector2::new(350., 175.)) - (other_object.pos + Vector2::new(350., 350.));
+        let normalized_distance = collision_distance.norm();
+
+        if normalized_distance <=  52.288335398692426447458814667607/*62.288335398692426447458814667607*/ {
+            other_object.life -= 1.0;
+            initial_object.pos = Point2::new(800.0, 800.0);
+            input.fire = 0.0;
+            println!("bullet collision")
+        }
+    }
+}
+
+//checks if you've been killed
+fn death() {
+
 }
 
 //calculates where the where the player object is facing based on the rotation value given
@@ -137,6 +183,7 @@ fn draw_limits(ctx: &mut Context, coords: Point2, actor: &Actor, assets: &mut As
 }
 
 //uses the forward_angle function to figure out where player is facing, multiplys it by 3 so it moves forward. Only moves forward when "W" is pressed
+//this fn and turnrate fn can be put onto the same function
 fn move_player(actor: &mut Actor) {
     let forward_direction = forward_angle(actor.facing);
     let speed = forward_direction * (3.0);
@@ -267,11 +314,13 @@ fn boss_should_shoot() -> u32 {
 
 //calculates whether the player hit the enemy object yet, doesnt fully work yet because im using length and witdh
 //which results in the area of a square rather than a circle
+//this function is soon to be removed
 fn player_collision(b_actor: &Actor, p_actor: &mut Actor) {
     let total_distance = p_actor.pos - b_actor.pos;    
 
     if total_distance.y > 110.95264 && total_distance.y < 233.90009 {
         if total_distance.x >= -58.999634 && total_distance.x <= 58.62108 {
+            let total_distance = p_actor.pos + Vector2::new(350., 175.);
             p_actor.pos = b_actor.pos; 
             println!("vector equals : {}", total_distance);
         }
@@ -349,14 +398,13 @@ impl Assets {
     }
 }
 
-
-
 //holds everything that can be used in the Mainstate and the event loop, everything except functions
 struct MainState {
     input: InputState,
     boss: Actor,
     player_bullet: Actor,
     player: Actor,
+    test_player: Actor,
     boss_shot: Actor,
     f_loop: u32,
     loc: u32,
@@ -374,6 +422,7 @@ impl MainState {
 
         //assigning values to the variables in the struct 
         let player = create_player();
+        let test_player = create_player();
         let player_bullet = create_shot();
         let boss = create_boss();
         let assets = Assets::new(ctx)?;
@@ -386,6 +435,7 @@ impl MainState {
             boss,
             player_bullet,
             player,
+            test_player,
             boss_shot,
             f_loop: 1,
             assets,
@@ -443,10 +493,13 @@ impl event::EventHandler for MainState {
             }
             //calls the boss_shoot function into the loop so the bullet can move
             self.boss_pattern = boss_shoot(&mut self.input, &mut self.boss_shot, self.boss_pattern, self.path, self.loc);
+            CollisionLogic(&mut self.input, &mut self.player, &mut self.boss_shot);
+            CollisionLogic(&mut self.input, &mut self.player_bullet, &mut self.boss);
             
             //checks if player or player shot has collided
             player_collision(&self.boss, &mut self.player);
-            player_shot_collision(&mut self.input, &mut self.boss, &mut self.player_bullet);
+            //player_shot_collision(&mut self.input, &mut self.boss, &mut self.player_bullet);
+
         }
 
         Ok(())
@@ -479,6 +532,9 @@ impl event::EventHandler for MainState {
 
             let boss_shot = &self.boss_shot;
             draw_limits(ctx, Point2::new(700.0, 700.0), boss_shot, assets).unwrap();
+
+            let test_player = &self.test_player;
+            draw_limits(ctx, Point2::new(350., 700.0), test_player, assets).unwrap();
         }
         //draws everything onto the screen
         graphics::present(ctx);
