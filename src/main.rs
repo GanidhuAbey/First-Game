@@ -101,8 +101,6 @@ fn create_shot() -> Actor {
 //----------------------------------------\\
 fn CollisionLogic(input: &mut InputState, initial_object: &mut Actor, other_object: &mut Actor) {
     let collision_type = format!("{}{}", initial_object.shape, other_object.shape);
-    //you're probably goona open this up try to make progress, get frustrated and quit; so when that happens why not play some games with a freind
-    //instead of being the total neet you are?
 
     if collision_type == "TriangleCircle" {
         //first calculate hitbox
